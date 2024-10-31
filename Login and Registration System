@@ -1,0 +1,82 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+void registerUser () {
+    string username, password;
+    cout << "Register\n";
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    // Create or open the file to store user credentials
+    ofstream userFile("users.txt", ios::app);
+    if (userFile.is_open()) {
+        userFile << username << " " << password << endl;
+        userFile.close();
+        cout << "Registration successful!\n";
+    } else {
+        cout << "Error opening file for writing.\n";
+    }
+}
+
+bool loginUser () {
+    string username, password, fileUsername, filePassword;
+    cout << "Login\n";
+    cout << "Enter username: ";
+    cin >> username;
+    cout << "Enter password: ";
+    cin >> password;
+
+    // Open the file to read user credentials
+    ifstream userFile("users.txt");
+    if (userFile.is_open()) {
+        while (userFile >> fileUsername >> filePassword) {
+            if (fileUsername == username && filePassword == password) {
+                userFile.close();
+                cout << "Login successful!\n";
+                return true;
+            }
+        }
+        userFile.close();
+        cout << "Invalid username or password.\n";
+    } else {
+        cout << "Error opening file for reading.\n";
+    }
+    return false;
+}
+
+int main() {
+    int choice;
+    
+    while (true) {
+        cout << "\nWelcome to the Login and Registration System\n";
+        cout << "1. Register\n";
+        cout << "2. Login\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                registerUser ();
+                break;
+            case 2:
+                if (loginUser ()) {
+                    cout << "Welcome back!\n";
+                }
+                break;
+            case 3:
+                cout << "Exiting...\n";
+                return 0;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    }
+
+    return 0;
+}
